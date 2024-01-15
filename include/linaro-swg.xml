@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+        <remote name="github"   fetch="https://github.com" />
+        <default remote="github" revision="master" />
+
+        <!-- linaro-swg gits -->
+        <project path="linux"                name="linaro-swg/linux.git"                  revision="optee" clone-depth="1" />
+        <project path="optee_benchmark"      name="linaro-swg/optee_benchmark.git"/>
+        <project path="optee_examples"       name="linaro-swg/optee_examples.git" />
+</manifest>

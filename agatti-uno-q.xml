@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Arduino UNO Q (Qualcomm QRB2210 / QCM2290, "Agatti") open boot firmware:
+  TF-A + OP-TEE (with ADSP PAS) + U-Boot, mainline Linux and a Buildroot
+  rootfs, built with build/agatti.mk. Every project is pinned to a commit so
+  the checkout is reproducible; "upstream" names the branch the commit sits
+  on in the fork. See README.md (section "Arduino UNO Q / Agatti").
+-->
+<manifest>
+	<remote name="github" fetch="https://github.com" />
+	<remote name="io"     fetch="https://github.com/igoropaniuk" />
+	<default remote="github" revision="master" sync-j="4" />
+
+	<!-- Build orchestration: make -C build (agatti.mk is linked as Makefile) -->
+	<project path="build"              name="build.git"              remote="io"
+	         revision="69d7738a97d32b15f9682bf2afe8bea2856e2322" upstream="agatti">
+		<linkfile src="agatti.mk" dest="build/Makefile" />
+	</project>
+
+	<!-- Boot firmware with Agatti / UNO Q support -->
+	<project path="trusted-firmware-a" name="trusted-firmware-a.git" remote="io"
+	         revision="10bd92977849798ec5d6863bc482d57db325d5a3" upstream="qti-agatti-uno-q-v2" />
+	<project path="optee_os"           name="optee_os.git"           remote="io"
+	         revision="8b3c986b0e172fbdf87e4d330e538f4ea1595a51" upstream="feat/agatti-pas" />
+	<project path="u-boot"             name="u-boot.git"             remote="io"
+	         revision="e65e80651530786972d953f9839b52210860f0b7" upstream="agatti-uno-q" />
+
+	<!-- Linux v7.3-rc6 + the OP-TEE carveout/firmware node for agatti -->
+	<project path="linux"              name="linux.git"              remote="io"
+	         revision="5cf6306fdef63997315ab81f3683f741fa51ea95" upstream="agatti-unoq-optee" clone-depth="1" />
+
+	<!-- OP-TEE userspace, built into the rootfs by build/br-ext -->
+	<project path="optee_client"       name="OP-TEE/optee_client.git"       revision="refs/tags/4.11.0" />
+	<project path="optee_test"         name="OP-TEE/optee_test.git"         revision="953c16912391d000e413468cb8a631d5d7ff627f" upstream="master" />
+	<project path="optee_examples"     name="linaro-swg/optee_examples.git" revision="refs/tags/4.11.0" />
+	<project path="optee_ftpm"         name="OP-TEE/optee_ftpm.git"         revision="refs/tags/4.11.0" />
+	<project path="ms-tpm-20-ref"      name="microsoft/ms-tpm-20-ref"       revision="98b60a44aba79b15fcce1c0d1e46cf5918400f6a" clone-depth="1" />
+
+	<!-- Rootfs -->
+	<project path="buildroot"          name="buildroot/buildroot.git"       revision="refs/tags/2026.02.2" clone-depth="1" />
+
+	<!-- Partition layout generator (GPT, rawprogram0.xml, patch0.xml) -->
+	<project path="qcom-ptool"         name="qualcomm-linux/qcom-ptool.git" revision="d7c0e814a6f1f40469f65c61eae05a553c384566" upstream="main" />
+</manifest>

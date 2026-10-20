@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+        <!--
+          Arduino UNO Q (QCM2290 / QRB2210 "Agatti"): the qemu_v8 set, with
+          build, linux, u-boot, trusted-firmware-a and optee_os taken from the
+          agatti-next integration branches, and Buildroot master (it carries
+          the qrtr, rmtfs and tqftpserv packages the modem needs).
+        -->
+        <remote name="tfo"     fetch="https://git.trustedfirmware.org" />
+        <remote name="qcom-io" fetch="https://github.qualcomm.com/iopaniuk" />
+        <remote name="io" fetch="https://github.com/igoropaniuk" />
+
+        <include name="common.xml" />
+        <remove-project name="OP-TEE/optee_os.git" />
+        <remove-project name="linaro-swg/linux.git" />
+        <remove-project name="buildroot/buildroot.git" />
+
+        <!-- Agatti integration branches -->
+        <project path="build"                name="build.git"                remote="io" revision="agatti-next">
+                <linkfile src="agatti.mk" dest="build/Makefile" />
+        </project>
+        <project path="linux"                name="linux.git"                remote="io" revision="agatti-next" />
+        <project path="u-boot"               name="u-boot.git"               remote="io" revision="agatti-next" />
+        <project path="trusted-firmware-a"   name="trusted-firmware-a.git"   remote="qcom-io" revision="agatti-next" sync-s="true" />
+        <project path="optee_os"             name="optee_os.git"             remote="qcom-io" revision="agatti-next" />
+
+        <!-- Fetched by the build itself when missing; pinned here -->
+        <!-- eMMC partition layout (agatti.mk QCOM_PTOOL_REV) -->
+        <project path="qcom-ptool"           name="qualcomm-linux/qcom-ptool.git"  revision="d7c0e814a6f1f40469f65c61eae05a553c384566" upstream="main" />
+        <!-- FIP ELF signing (trusted-firmware-a/tools/qti/generate_fip_elf.sh) -->
+        <project path="trusted-firmware-a/qtestsign" name="msm8916-mainline/qtestsign.git" revision="0eef3b552b1ada848f22bad38ab2e40407307c5b" upstream="main" />
+
+        <!-- buildroot git: master -->
+        <project path="buildroot"            name="buildroot/buildroot.git"  revision="master" />
+
+        <!-- Misc gits, as in qemu_v8.xml -->
+        <project path="optee_rust"           name="apache/teaclave-trustzone-sdk.git"            revision="4a368455ec1c15b387fe9085b9c3ea5ae1cc73f1" clone-depth="1" />
+        <project path="qemu"                 name="qemu/qemu.git"                         revision="refs/tags/v10.0.0" clone-depth="1" />
+        <project path="hafnium"              name="TF-Hafnium/hafnium.git"                   revision="refs/tags/v2.14.0" clone-depth="1" />
+        <project path="mbedtls"              name="Mbed-TLS/mbedtls.git"                  revision="refs/tags/mbedtls-3.6.5" sync-s="true" clone-depth="1" />
+        <project path="xen"                  name="xen-project/xen.git"                   revision="refs/tags/RELEASE-4.20.0" clone-depth="1" />
+        <project path="SCP-firmware"         name="linaro-swg/SCP-firmware.git"             revision="refs/tags/v2.16.0" clone-depth="1" />
+
+        <project path="trusted-services"     name="TS/trusted-services.git"                  revision="8881aaa3a9cb21e8b869e28c1a079f02fa46fd6c" remote="tfo" clone-depth="1" />
+        <project path="linux-arm-ffa-user"   name="linaro-swg/linux-trusted-services.git" revision="refs/tags/debugfs-v5.0.2"     clone-depth="1" />
+</manifest>
